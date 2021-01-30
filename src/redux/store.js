@@ -5,11 +5,16 @@ import logger from 'redux-logger';
 
 import rootReducer from './root-reducer';
 
-const middlewares = [logger];
+const middlewares = [];
+let middlewareConfig;
 
-export const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(...middlewares))
-);
+if (process.env.NODE_ENV === 'development') {
+  middlewares.push(logger);
+  middlewareConfig = composeWithDevTools(applyMiddleware(...middlewares));
+} else {
+  middlewareConfig = applyMiddleware(...middlewares);
+}
+
+export const store = createStore(rootReducer, middlewareConfig);
 
 export const persistor = persistStore(store);
