@@ -16,6 +16,15 @@ firebase.initializeApp(config);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
+      unsubscribe();
+      resolve(userAuth);
+    }, reject);
+  });
+};
+
 // When a user sign in with google, we save the data into firestore database
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
